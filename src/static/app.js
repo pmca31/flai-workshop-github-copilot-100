@@ -71,16 +71,14 @@ document.addEventListener("DOMContentLoaded", () => {
             deleteIcon.className = "delete-icon";
             deleteIcon.title = "Remove participant";
             deleteIcon.textContent = "🗑️";
-            deleteIcon.setAttribute("data-activity", name);
-            deleteIcon.setAttribute("data-email", email);
             
+            // Store data in closure instead of data attributes for better security
             deleteIcon.addEventListener("click", async () => {
-              const activityName = deleteIcon.getAttribute("data-activity");
-              const participantEmail = deleteIcon.getAttribute("data-email");
-              if (!activityName || !participantEmail) return;
-              if (!confirm(`Remove ${participantEmail} from ${activityName}?`)) return;
+              // Create a safe confirmation message
+              const confirmMsg = `Remove participant from activity?\n\nParticipant: ${email}\nActivity: ${name}`;
+              if (!confirm(confirmMsg)) return;
               try {
-                const response = await fetch(`/activities/${encodeURIComponent(activityName)}/unregister?email=${encodeURIComponent(participantEmail)}`, {
+                const response = await fetch(`/activities/${encodeURIComponent(name)}/unregister?email=${encodeURIComponent(email)}`, {
                   method: "POST",
                 });
                 if (response.ok) {
