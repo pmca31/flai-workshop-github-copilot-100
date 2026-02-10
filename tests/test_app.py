@@ -62,3 +62,35 @@ def test_signup_twice():
     resp2 = client.post(f"/activities/{activity}/signup?email={email}")
     assert resp2.status_code == 400
     assert resp2.json()["detail"] == "Student already signed up for this activity"
+
+
+def test_signup_empty_email():
+    activity = "Basketball Team"
+    # Test with empty email
+    resp = client.post(f"/activities/{activity}/signup?email=")
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "Email cannot be empty or whitespace-only"
+
+
+def test_signup_whitespace_email():
+    activity = "Basketball Team"
+    # Test with whitespace-only email
+    resp = client.post(f"/activities/{activity}/signup?email=   ")
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "Email cannot be empty or whitespace-only"
+
+
+def test_unregister_empty_email():
+    activity = "Drama Club"
+    # Test with empty email
+    resp = client.post(f"/activities/{activity}/unregister?email=")
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "Email cannot be empty or whitespace-only"
+
+
+def test_unregister_whitespace_email():
+    activity = "Drama Club"
+    # Test with whitespace-only email
+    resp = client.post(f"/activities/{activity}/unregister?email=   ")
+    assert resp.status_code == 400
+    assert resp.json()["detail"] == "Email cannot be empty or whitespace-only"
