@@ -20,20 +20,6 @@ app = FastAPI(title="Mergington High School API",
 # Mount the static files directory
 current_dir = Path(__file__).parent
 app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent, "static")), name="static")
-# Unregister endpoint
-@app.post("/activities/{activity_name}/unregister")
-async def unregister_from_activity(activity_name: str, email: str):
-    # Validate email is not empty or whitespace-only
-    if not email.strip():
-        raise HTTPException(status_code=400, detail="Email cannot be empty or whitespace-only")
-    
-    if activity_name not in activities:
-        raise HTTPException(status_code=404, detail="Activity not found")
-    activity = activities[activity_name]
-    if email not in activity["participants"]:
-        raise HTTPException(status_code=400, detail="Participant not found")
-    activity["participants"].remove(email)
-    return {"message": f"{email} removed from {activity_name}"}
 
 # In-memory activity database
 activities = {
@@ -126,3 +112,19 @@ def signup_for_activity(activity_name: str, email: str):
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
+
+
+@app.post("/activities/{activity_name}/unregister")
+async def unregister_from_activity(activity_name: str, email: str):
+    """Unregister a student from an activity"""
+    # Validate email is not empty or whitespace-only
+    if not email.strip():
+        raise HTTPException(status_code=400, detail="Email cannot be empty or whitespace-only")
+        
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Participant not found")
+    activity["participants"].remove(email)
+    return {"message": f"{email} removed from {activity_name}"}
