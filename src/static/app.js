@@ -71,9 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
             deleteIcon.className = "delete-icon";
             deleteIcon.title = "Remove participant";
             deleteIcon.textContent = "🗑️";
+            deleteIcon.setAttribute("role", "button");
+            deleteIcon.setAttribute("aria-label", "Remove participant");
+            deleteIcon.setAttribute("tabindex", "0");
             
-            // Store data in closure instead of data attributes for better security
-            deleteIcon.addEventListener("click", async () => {
+            const handleDelete = async () => {
               // Create a safe confirmation message
               const confirmMsg = `Remove participant from activity?\n\nParticipant: ${email}\nActivity: ${name}`;
               if (!confirm(confirmMsg)) return;
@@ -89,6 +91,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
               } catch (error) {
                 alert("Error removing participant.");
+              }
+            };
+            
+            // Store data in closure instead of data attributes for better security
+            deleteIcon.addEventListener("click", handleDelete);
+            deleteIcon.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleDelete();
               }
             });
 
