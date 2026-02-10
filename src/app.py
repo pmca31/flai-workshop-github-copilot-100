@@ -24,7 +24,7 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent, "
 @app.post("/activities/{activity_name}/unregister")
 async def unregister_from_activity(activity_name: str, email: str):
     # Validate email is not empty or whitespace-only
-    if not email or not email.strip():
+    if not email.strip():
         raise HTTPException(status_code=400, detail="Email cannot be empty or whitespace-only")
     
     if activity_name not in activities:
@@ -108,7 +108,7 @@ def get_activities():
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
     # Validate email is not empty or whitespace-only
-    if not email or not email.strip():
+    if not email.strip():
         raise HTTPException(status_code=400, detail="Email cannot be empty or whitespace-only")
     
     # Validate activity exists
