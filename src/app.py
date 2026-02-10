@@ -115,7 +115,7 @@ def signup_for_activity(activity_name: str, email: str):
 
 
 @app.post("/activities/{activity_name}/unregister")
-async def unregister_from_activity(activity_name: str, email: str):
+def unregister_from_activity(activity_name: str, email: str):
     """Unregister a student from an activity"""
     # Validate email is not empty or whitespace-only
     if not email.strip():
