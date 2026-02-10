@@ -1,3 +1,6 @@
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+# ...existing code...
 """
 High School Management System API
 
@@ -16,8 +19,17 @@ app = FastAPI(title="Mergington High School API",
 
 # Mount the static files directory
 current_dir = Path(__file__).parent
-app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
-          "static")), name="static")
+app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent, "static")), name="static")
+# Unregister endpoint
+@app.post("/activities/{activity_name}/unregister")
+async def unregister_from_activity(activity_name: str, email: str):
+    if activity_name not in activities:
+        raise HTTPException(status_code=404, detail="Activity not found")
+    activity = activities[activity_name]
+    if email not in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Participant not found")
+    activity["participants"].remove(email)
+    return {"message": f"{email} removed from {activity_name}"}
 
 # In-memory activity database
 activities = {
